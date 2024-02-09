@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - data:/var/lib/postgresql/data
+      - ./BO/Database/data_base.sql:/docker-entrypoint-initdb.d/data_base.sql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pdb
+
+  api:
+    build:
+      context: ./BO/API/
+    volumes:
+      - ./BO/API/:/var/www/html/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql://username:password@db:5432/pdb?serverVersion=15&charset=utf8"
+
+  front:
+    build:
+      context: ./Frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+      - db
+    environment:
+      - HOST=0.0.0.0
+
+volumes:
+  data:
