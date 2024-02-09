@@ -5,17 +5,19 @@
 
  #### Morgan
  - [x] Project documentation
- - [ ] Docker setup
- - [ ] /!\ PHP Symfony learning + API Requests
+ - [x] Docker setup
+ - [x] /!\ PHP Symfony learning
  - [x] Data Base
+ - [ ] API Requests
+
 
 #### Arthur
-- [ ] React learning
-- [ ] Front Visuals
+- [x] React learning
+- [x] Front Visuals
 
 ##### Lukas
-- [ ] React learning
-- [ ] Front Visuals
+- [x] React learning
+- [x] Front Visuals
 
 #### Ewen
-- [ ] API Requests
+- [ ] BackOffice
