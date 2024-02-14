@@ -6,10 +6,10 @@ GLOBAL strstr
 strstr:
     MOV RCX, RSI ; je save l'adresse de ma substring
     MOV R8, RDI ; je save l'adresse de ma string de recheche
-    CMP BYTE [RDI], 0 ; je compare si la string dans laquelle je cherche est un nullbyte
-    JE _exit_null ; si oui je revoie null
     CMP BYTE [RSI], 0 ; sinon si la string que je cherche est est un nullbyte
     JE _exit ; j'exite le programme en revoyant simplement la string dans laquelle je cherche
+    CMP BYTE [RDI], 0 ; je compare si la string dans laquelle je cherche est un nullbyte
+    JE _exit_null ; si oui je revoie null
     JMP _loop ; sinon je lance ma loop
 
 _loop:

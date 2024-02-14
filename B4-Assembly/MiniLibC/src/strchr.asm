@@ -2,7 +2,9 @@ BITS 64
 
 SECTION .text
 GLOBAL strchr
+GLOBAL index
 
+index:
 strchr:
 
     JMP .loop ; lancer la boucle

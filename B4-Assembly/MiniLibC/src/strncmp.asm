@@ -23,7 +23,7 @@ strncmp:
     JMP .loop
 
 _exit:
-    CMP RCX, 0 ; dans le cas ou je cherche à comparer 0 elm j'exit 0
+    CMP RDX, 0 ; dans le cas ou je cherche à comparer 0 elm j'exit 0
     JE _exit_null
     MOVZX RAX, AL ; je set RAX à la valeur de char s1 
     MOVZX RBX, BL ; je set RBX à la valeur de char s2

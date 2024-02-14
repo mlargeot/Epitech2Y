@@ -2,7 +2,9 @@ BITS 64
 
 SECTION .text
 GLOBAL strrchr
+GLOBAL rindex
 
+rindex:
 strrchr:
     XOR RAX, RAX ; j'init RAX à 0
     JMP _loop ; le lance ma loop (_loop pour eviter les erreurs de compilation)
@@ -18,7 +20,9 @@ _loop:
 
 _change_pointer:
     MOV RAX, RDI ; je set la valeur de RAX au pointeur RDI
-    INC RDI ; j'incrémente RDI pour éviter de faire une loop sans fin
+    CMP BYTE [RDI], 0 ; sachant que le nullbyte est compris je verifie si je suis dessus
+    JE _exit ; dans ce cas je retourne
+    INC RDI ; sinon j'incrémente RDI pour éviter de faire une loop sans fin
     JMP _loop ; je retourne dans ma loop
 
 _exit:
