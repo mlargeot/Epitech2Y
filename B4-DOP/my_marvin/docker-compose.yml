@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  jenkins:
+    container_name: my-marvin
+    build: ./
+    volumes:
+      - "./my_marvin.yml:/var/jenkins_home/config.yml"
+      - "./job_dsl.groovy:/var/jenkins_home/job_dsl.groovy"
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    env_file:
+      - .env
