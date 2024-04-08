@@ -1,0 +1,39 @@
+- name: Install poll package
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - python3
+    - python3-pip
+
+- name: Unzip tar directory
+  become: true
+  unarchive:
+    src: ../../../poll.tar
+    dest: /opt/
+
+- name: Upload poll service
+  become: true
+  template:
+    src: ../files/poll.service
+    dest: /etc/systemd/system/
+
+- name: Create virtual environement
+  become: true
+  command:
+    cmd: python3 -m venv /opt/poll/venv
+
+- name: Install dependencies
+  become: true
+  ansible.builtin.pip:
+    requirements: /opt/poll/requirements.txt
+    virtualenv: /opt/poll/venv
+
+- name: Run poll service
+  become: true
+  systemd:
+    name: poll
+    state: restarted
+    enabled: yes
+    daemon_reload: true

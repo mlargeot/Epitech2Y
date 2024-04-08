@@ -1,0 +1,19 @@
+- name: Install redis
+  become: true
+  apt:
+    name: redis-server
+    state: present
+
+- name: Upload redis
+  become: true
+  template:
+    src: ../files/redis.conf
+    dest: /etc/redis/redis.conf
+
+- name: Restart redis
+  become: true
+  systemd:
+    name: redis-server
+    state: restarted
+    daemon_reload: true
+    enabled: yes

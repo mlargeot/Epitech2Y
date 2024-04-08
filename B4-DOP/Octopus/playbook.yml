@@ -1,0 +1,48 @@
+- name: base
+  hosts: all
+  roles:
+    - base
+
+- name: redis
+  hosts: redis
+  vars_files:
+    - group_vars/all.yml
+  roles:
+    - redis
+  tags:
+    - redis
+
+- name: postgresql
+  hosts: postgresql
+  vars_files:
+    - group_vars/all.yml
+  roles:
+    - postgresql
+  tags:
+    - postgresql
+
+
+- name: poll
+  hosts: poll
+  vars_files:
+    - group_vars/all.yml
+  roles:
+    - poll
+  tags:
+    - poll
+
+- name: worker
+  hosts: worker
+  vars_files:
+    - group_vars/all.yml
+  roles:
+    - worker
+  tags:
+    - worker
+
+- name: result
+  hosts: result
+  vars_files:
+    - group_vars/all.yml
+  roles:
+    - result

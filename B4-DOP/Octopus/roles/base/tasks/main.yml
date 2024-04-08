@@ -1,0 +1,32 @@
+- name: Update OS
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install Git
+  become: true
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+
+- name: Install usefull packages
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - wget
+    - curl
+    - zip
+    - tar
+
+- name: Install python packages
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - python3
+    - python3-pip

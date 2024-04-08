@@ -1,0 +1,49 @@
+- name: Unzip worker directory
+  become: true
+  unarchive:
+    src: ../../../worker.tar
+    dest: /opt/
+
+- name: Upload worker service
+  become: true
+  template:
+    src: ../files/worker.service
+    dest: /etc/systemd/system/
+
+- name: Install maven
+  become: True
+  apt:
+    name: maven
+    state: present
+
+- name: Get jdk-21 package
+  become: true
+  get_url:
+    url: "https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb"
+    dest: /opt
+
+- name: Install jdk-21 packages
+  become: true
+  shell: "dpkg -i jdk-21_linux-x64_bin.deb"
+  args:
+    chdir : /opt
+
+- name: Resolve dependencies
+  become: True
+  command:
+    cmd: mvn dependency:resolve
+    chdir: /opt/worker
+
+- name: Build the worker
+  become: True
+  shell: mvn package
+  args:
+    chdir: /opt/worker
+
+- name: Run the worker
+  become: true
+  systemd:
+    name: worker
+    state: restarted
+    enabled: yes
+    daemon_reload: true

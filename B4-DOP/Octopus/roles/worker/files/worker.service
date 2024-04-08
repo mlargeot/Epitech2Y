@@ -1,0 +1,19 @@
+[Unit]
+Description=Worker service
+After=network.target
+
+[Service]
+Type=simple
+Environment="REDIS_HOST={{ redis_host }}"
+Environment="POSTGRES_HOST={{ postgresql_host }}"
+Environment="POSTGRES_PORT={{ postgresql_port }}"
+Environment="POSTGRES_DB={{ postgresql_db }}"
+Environment="POSTGRES_USER={{ postgresql_user }}"
+Environment="POSTGRES_PASSWORD={{ postgresql_pass }}"
+
+WorkingDirectory=/opt/worker/
+ExecStart=/usr/bin/java -jar /opt/worker/target/worker-jar-with-dependencies.jar
+Restart=always
+RestartSec=10
+[Install]
+WantedBy=multi-user.target

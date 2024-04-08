@@ -1,0 +1,33 @@
+- name: Unzip tar directory
+  become: true
+  unarchive:
+    src: ../../../result.tar
+    dest: /opt/
+
+- name: Upload result service
+  become: true
+  template:
+    src: ../files/result.service
+    dest: /etc/systemd/system/
+
+- name: Install result packages
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+      - nodejs
+      - npm
+
+- name: Install dependencies
+  become: true
+  npm:
+    path: /opt/result/
+
+- name: Run result service
+  become: true
+  systemd:
+    name: result
+    state: restarted
+    enabled: yes
+    daemon_reload: true
