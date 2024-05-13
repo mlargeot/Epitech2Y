@@ -30,20 +30,24 @@ typedef struct channel_s {
     team_t *team;
 } channel_t;
 
-typedef struct thread_s {
-    char *uuid;
-    char *title;
-    char *message;
-    channel_t *channel;
-} thread_t;
-
 typedef struct user_s {
     char *uuid;
     char *username;
     char *password;
     team_t **teams;
     context_t context;
+    char *context_uuid;
+    int is_logged;
 } user_t;
+
+typedef struct thread_s {
+    char *uuid;
+    char *title;
+    char *message;
+    time_t timestamp;
+    user_t *user;
+    channel_t *channel;
+} thread_t;
 
 typedef struct comment_s {
     char *uuid;

@@ -6,3 +6,4 @@ vgcore*
 .vscode
 **/db.txt
 *.a
+libs/

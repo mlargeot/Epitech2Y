@@ -5,96 +5,51 @@
 ## Makefile
 ##
 
-SRC	= main.c \
-	\
-	start_handling/usage/display_usage.c \
-	\
-	start_handling/error_handling/handle_error.c \
-	\
-	utils/split_str.c \
-	utils/destroy_array.c \
-	utils/get_array_size.c \
-	utils/mkstw.c \
-	utils/is_valid_channel.c \
-	utils/is_valid_thread.c \
-	utils/is_valid_team.c \
-	utils/is_valid_user.c \
-	utils/fetch_url.c \
-	\
-	client_handling/init_client.c \
-	client_handling/destroy_client.c \
-	\
-	handle_client_cmd.c \
-	\
-	commands/send/send_serv_request.c \
-	\
-	commands/send/cmd/help.c \
-	commands/send/cmd/login.c \
-	commands/send/cmd/logout.c \
-	commands/send/cmd/use.c \
-	commands/send/cmd/send.c \
-	commands/send/cmd/user.c \
-	commands/send/cmd/users.c \
-	commands/send/cmd/messages.c \
-	commands/send/cmd/create/create.c \
-	commands/send/cmd/create/create_team.c \
-	commands/send/cmd/create/create_channel.c \
-	commands/send/cmd/create/create_thread.c \
-	commands/send/cmd/create/create_reply.c \
+NAME =	myteams_cli
 
-OBJ = $(SRC:.c=.o)
+SRC	= 	main.c \
+		\
+		start_handling/usage/display_usage.c \
+		start_handling/error_handling/handle_error.c \
+		\
+		utils/split_string.c \
+		utils/destroy_array.c \
+		utils/mkstw.c \
+		utils/get_array_size.c \
+		\
+		client_handling/init_client.c \
+		client_handling/destroy_client.c \
+		\
+		handle_client_command.c \
+		handle_server_response.c \
+		\
+		commands/send/send_serv_request.c \
+		commands/send/help.c \
+		commands/send/args_handler.c \
+		\
+		commands/recv/event_49_to_100.c \
+		commands/recv/event_114_to_186.c \
+		commands/recv/event_205_to_276.c \
+		commands/recv/event_288_to_337.c \
+		commands/recv/event_352_to_414.c \
+		commands/recv/event_430_to_471.c \
+		commands/recv/event_500_to_501.c \
+		\
+		../shared/time.c
 
-INCLUDE_FLAGS = \
-	-I ../../include \
-	-I ../../libs/myteams \
-	-I ../../libs/simple-map-c/include \
-	-I ../../libs/simple-list-c/include \
-	-I ../../libs/simple-xml-c/include \
-	-I ../../libs/simple-fetch-c/include \
+OBJ	=	$(SRC:.c=.o)
 
-C_WARNING_FLAGS = -Wextra -Wall -g
-C_FLAGS = $(C_WARNING_FLAGS) $(INCLUDE_FLAGS)
+CFLAGS	=	-I ../../include/ \
+			-I ../../libs/myteams/
 
-# Library
-LIB_FLAGS = \
-	-luuid \
-	-L ../../libs/simple-fetch-c -l:simple_fetch.a \
-	-L ../../libs/simple-xml-c -l:simple_xml.a \
-	-L ../../libs/simple-map-c -l:simple_map.a \
-	-L ../../libs/simple-list-c -l:simple_list.a \
-	-L ../../libs/myteams -l:libmyteams.so \
+LDFLAGS	=	-L ../../libs/myteams -lmyteams -luuid \
 
-NAME = myteams_cli
+all:	$(NAME)
 
-GCC = gcc
-
-all: $(NAME)
-
-.c.o:
-	@echo "$(notdir $(CURDIR)): C '$<'"
-	@$(GCC) $(C_FLAGS) -c -o $*.o $<
-
-$(NAME): simple_map simple_list simple_xml simple_fetch $(OBJ)
-	@$(GCC) -o $@ $(OBJ) $(INCLUDE_FLAGS) $(LIB_FLAGS)
-.PHONY: $(NAME)
+$(NAME): $(OBJ)
+	gcc -o $(NAME) $(OBJ) $(LFLAGS) $(LDFLAGS)
 
 clean:
-	@rm -f $(OBJ)
-.PHONY: clean
+	rm -f $(OBJ)
 
 fclean: clean
-	@rm -f $(NAME)
-.PHONY: fclean
-
-re: fclean all
-.PHONY: re
-
-### Library ###
-simple_fetch:
-	make -C ../../libs/simple-fetch-c
-simple_map:
-	make -C ../../libs/simple-map-c
-simple_list:
-	make -C ../../libs/simple-list-c
-simple_xml:
-	make -C ../../libs/simple-xml-c

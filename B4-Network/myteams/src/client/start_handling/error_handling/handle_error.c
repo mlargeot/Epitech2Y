@@ -9,11 +9,12 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <client/cli_utils.h>
+
+#include "myteams_cli.h"
 
 static bool handle_ip(char *ip)
 {
-    char **splited_ip = split_str(ip, ".");
+    char **splited_ip = split_string(ip, ".");
     int ip_nb[4] = {-1};
     size_t i = 0;
 

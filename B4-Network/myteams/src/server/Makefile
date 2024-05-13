@@ -5,110 +5,74 @@
 ## Makefile
 ##
 
-SRC	=   main.c \
-		\
-		middleware/auth_middleware.c \
-		\
-		utils/extract_bearer_token.c \
-		utils/uuid.c \
-		\
-		controller/teams_controller.c \
-		controller/channels_controller.c \
-		controller/threads_controller.c \
-		controller/users_controller.c \
-		controller/messages_controller.c \
-		controller/auth_controller.c \
-		controller/ping_controller.c \
-		\
-		service/auth/login_auth.c \
-		service/auth/logout_auth.c \
-		\
-		service/teams/create_team.c \
-		service/teams/get_team.c \
-		service/teams/subscription_team.c \
-		service/teams/team_entity_to_xml.c \
-		\
-		service/channels/create_channel.c \
-		service/channels/get_channel.c \
-		service/channels/channel_entity_to_xml.c \
-		\
-		service/threads/create_thread.c \
-		service/threads/get_thread.c \
-		service/threads/reply_thread.c \
-		service/threads/thread_entity_to_xml.c \
-		service/threads/thread_reply_entity_to_xml.c \
-		\
-		service/users/get_user.c \
-		service/users/send_message_user.c \
-		service/users/user_entity_to_xml.c \
-		\
-		service/ping/get_ping.c \
-		\
-		service/messages/get_messages.c \
-		service/messages/message_entity_to_xml.c \
-		\
-		db/get_set_db.c \
-		db/init_db.c \
-		db/save_db.c \
-		db/load_db.c \
-		db/free_db.c \
-		db/entity/team.c \
-		db/entity/channel.c \
-		db/entity/thread.c \
-		db/entity/user.c \
-		db/entity/user_team.c \
-		db/entity/message.c \
-		db/entity/comment.c \
-		db/getters/simple.c \
-		db/getters/simple_bis.c \
-		db/getters/get_channels.c \
-		db/getters/get_comments.c \
-		db/getters/get_messages.c \
-		db/display_db.c
+NAME	=	myteams_server
 
-OBJ = $(SRC:.c=.o)
+SRC	= src/main.c \
+		src/server.c \
+		src/fd_handler.c \
+		src/new_client.c \
+		src/uuid.c \
+		src/mkstw.c \
+		src/stw.c \
+		\
+		src/commands/handle_command.c \
+		../shared/time.c
 
-INCLUDE_FLAGS = \
-	-I ../../include \
-	-I ../../libs/myteams \
-	-I ../../libs/simple-map-c/include \
-	-I ../../libs/simple-list-c/include \
-	-I ../../libs/simple-xml-c/include \
-	-I ../../libs/http-standard-c/include \
+SRC += src/db/display_db.c \
+		src/db/free_db.c \
+		src/db/init_db.c \
+		src/db/get_set_db.c \
+		src/db/load_db.c \
+		src/db/save_db.c \
+		src/db/exist.c \
+		\
+		src/db/entity/channel.c \
+		src/db/entity/message.c \
+		src/db/entity/team.c \
+		src/db/entity/user.c \
+		src/db/entity/thread.c \
+		src/db/entity/comment.c \
+		src/db/entity/user_team.c \
+		\
+		src/db/getters/get_channels.c \
+		src/db/getters/get_messages.c \
+		src/db/getters/get_comments.c \
+		src/db/getters/simple_bis.c \
+		src/db/getters/simple.c \
+		src/db/getters/find.c
 
-C_WARNING_FLAGS = -Wextra -Wall -g
-C_FLAGS = $(C_WARNING_FLAGS) $(INCLUDE_FLAGS)
+SRC += src/commands/login.c \
+		src/commands/logout.c \
+		src/commands/users.c \
+		src/commands/user.c \
+		src/commands/send.c \
+		src/commands/messages.c \
+		src/commands/subscribe.c \
+		src/commands/subscribed.c \
+		src/commands/unsubscribe.c \
+		src/commands/use.c \
+		src/commands/create.c \
+		src/commands/list.c \
+		src/commands/info.c \
+		src/commands/unauthorized.c \
+		src/commands/not_found.c \
+		src/commands/already_exist.c \
+		src/commands/client_event.c
 
-# Library
-LIB_FLAGS = \
-	-luuid \
-	-L ../../libs/http-standard-c -l:http_standard.a \
-	-L ../../libs/simple-xml-c -l:simple_xml.a \
-	-L ../../libs/simple-map-c -l:simple_map.a \
-	-L ../../libs/simple-list-c -l:simple_list.a \
-	-L ../../libs/myteams -l:libmyteams.so \
 
-NAME = myteams_server
+OBJ	=	$(SRC:.c=.o)
 
-GCC = gcc
+CFLAGS	=	-I ../../include/ \
+			-I ../../libs/myteams/
 
-all: $(NAME)
+LDFLAGS	=	-L ../../libs/myteams -lmyteams -luuid
 
-.c.o:
-	@echo "$(notdir $(CURDIR)): C '$<'"
-	@$(GCC) $(C_FLAGS) -c -o $*.o $<
+all:	$(NAME)
 
 $(NAME): $(OBJ)
-	@$(GCC) -o $@ $(OBJ) $(INCLUDE_FLAGS) $(LIB_FLAGS)
-.PHONY: $(NAME)
+	gcc -o $(NAME) $(OBJ) $(LFLAGS) $(LDFLAGS)
 
 clean:
-	@rm -f $(OBJ)
-.PHONY: clean
+	rm -f $(OBJ)
 
 fclean: clean
-	@rm -f $(NAME)
-.PHONY: fclean
-
-re: fclean all
-.PHONY: re

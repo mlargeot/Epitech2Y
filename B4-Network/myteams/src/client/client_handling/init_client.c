@@ -7,12 +7,12 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include "client/myteams_cli.h"
+
+#include "myteams_cli.h"
 
 client_t *init_client(char *ip, char *port)
 {
-    client_t *client = calloc(1, sizeof(client_t));
+    client_t *client = malloc(sizeof(client_t));
 
     if (client == NULL)
         return NULL;
@@ -25,10 +25,8 @@ client_t *init_client(char *ip, char *port)
     client->cli_adr.sin_family = AF_INET;
     client->cli_adr.sin_port = htons(atoi(port));
     client->cli_adr.sin_addr.s_addr = inet_addr(ip);
+    client->cli_uuid = NULL;
+    client->server_buffer = calloc(1, sizeof(char));
     client->adr_len = sizeof(client->cli_adr);
-    client->cli_logged = false;
-    client->scope.scope = NONE;
-    asprintf(&client->cli_url, "%s:%s", ip, port);
-    client->cli_username = NULL;
     return client;
 }

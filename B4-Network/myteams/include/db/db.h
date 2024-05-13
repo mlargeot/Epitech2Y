@@ -25,6 +25,7 @@ size_t get_len(void **list);
 int fwrite_str(FILE *file, char *str);
 char *fread_str(FILE *file);
 void display_db(void);
+char *uuid_gen(char *path);
 
 int free_channels(channel_t **channels);
 int free_comments(comment_t **comments);
@@ -33,12 +34,16 @@ int free_teams(team_t **teams);
 int free_threads(thread_t **threads);
 int free_users(user_t **users);
 
-int db_new_channel(char *name, char *description, team_t *team);
-int db_new_comment(char *message, user_t *user, thread_t *thread);
-int db_new_message(char *message, user_t *sender, user_t *receiver);
-int db_new_team(char *name, char *description);
-int db_new_thread(char *title, char *message, channel_t *channel);
-int db_new_user(char *username, char *password);
+channel_t *db_new_channel(char *name,
+    char *description, team_t *team);
+comment_t *db_new_comment(char *message,
+    user_t *user, thread_t *thread);
+message_t *db_new_message(char *message,
+    user_t *sender, user_t *receiver);
+team_t *db_new_team(char *name, char *description);
+thread_t *db_new_thread(char *title, char *message,
+    channel_t *channel, user_t *user);
+user_t *db_new_user(char *username, char *password);
 
 int db_delete_channel(char *uuid);
 int db_delete_comment(char *uuid);
@@ -75,9 +80,8 @@ user_t **db_get_users(void);
 comment_t **db_get_comments(void);
 message_t **db_get_messages(void);
 
-message_t **db_get_messages_from_user(char *uuid);
-message_t **db_get_messages_user_to_user(char *uuid_sender,
-    char *uuid_receiver);
+message_t **db_get_messages_between(char *uuid1,
+    char *uuid2);
 
 comment_t **db_get_comments_from_thread(char *uuid);
 comment_t **db_get_comments_from_user(char *uuid);
@@ -88,5 +92,16 @@ user_t **get_users_from_team(char *uuid);
 
 int add_user_to_team(char *user_uuid, char *team_uuid);
 int is_user_in_team(char *user_uuid, char *team_uuid);
+
+channel_t *find_channel_in_team(char *channel_uuid, char *team_uuid);
+thread_t *find_thread_int_channel(char *thread_uuid, char *channel_uuid);
+
+user_t *get_user_from_username(char *username);
+user_t *get_user_from_uuid(char *uuid);
+int is_user_subscribed(user_t *user, team_t *team);
+
+int is_team_exist(char *teamname);
+int is_channel_exist(char *channel_name, team_t *team);
+int is_thread_exist(char *thread_name, channel_t *channel);
 
 #endif /* !DB_METHODS_H_ */
