@@ -1,0 +1,8 @@
+myteams_server
+myteams_cli
+*.o
+*.log
+vgcore*
+.vscode
+**/db.txt
+*.a
